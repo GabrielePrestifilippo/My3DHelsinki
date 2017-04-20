@@ -13,8 +13,8 @@ require(['js/worldwind', 'js/UserInterface', 'js/geojson'],
             this.geojson = new GeoJson(worldwind.layerManager);
             var UserInterface = new UserInterface(worldwind.layerManager, this.geojson);
             UserInterface.listeners();
-
-            addOSM(worldwind.layerManager, geojson);
+           geojson.helsinki.call(geojson);
+            //addOSM(worldwind.layerManager, geojson);
 
 
             function addOSM(layerManager, geojson) {
@@ -35,7 +35,7 @@ require(['js/worldwind', 'js/UserInterface', 'js/geojson'],
                         layer.detailControl = 1.5;
                         wwd.addLayer(layer);
                         //var callback= function(){
-                            geojson.helsinki.call(geojson);
+
                         //}
                        // geojson.add("Neighborhoods", "Neighborhoods", 1, callback);
 

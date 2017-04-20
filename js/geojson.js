@@ -11,6 +11,7 @@ define(function () {
 
         var shapeConfigurationCallback = function (geometry, properties) {
             var configuration = {};
+            configuration.extrude=true;
             if (geometry.isPolygonType() || geometry.isMultiPolygonType()) {
                 configuration.attributes = new WorldWind.ShapeAttributes(null);
                 configuration.drawInterior = true;
@@ -27,12 +28,12 @@ define(function () {
                     0.375,
                     0.375,
                     1);
-
+                configuration.attributes.outlineWidth=0;
                 configuration.attributes.outlineColor = new WorldWind.Color(
                     0.5 * configuration.attributes.interiorColor.red,
                     0.5 * configuration.attributes.interiorColor.green,
                     0.5 * configuration.attributes.interiorColor.blue,
-                    1.0);
+                    0.0);
             }
 
             return configuration;
@@ -69,7 +70,7 @@ define(function () {
 
         var placemarkAttributes = new WorldWind.PlacemarkAttributes(null);
         placemarkAttributes.imageScale = 0.2;
-        placemarkAttributes.imageSource = 'icons/' + name + '.png';
+        placemarkAttributes.imageSource = "icons/castshadow-teal.png";//'icons/' + name + '.png';
 
 
         var shapeConfigurationCallback = function (geometry, properties) {
@@ -117,7 +118,6 @@ define(function () {
     };
 
     GeoJson.prototype.helsinki = function (callback) {
-        var resourcesUrl = "geojson/milano_grid.json";
 
         var self = this;
         $.ajax({
@@ -153,7 +153,7 @@ define(function () {
         polygonLayer.raster = true;
         this.grid = polygonLayer;
         wwd.addLayer(polygonLayer);
-        // this.layerManager.synchronizeLayerList();
+         this.layerManager.synchronizeLayerList();
 
     };
 

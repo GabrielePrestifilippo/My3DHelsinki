@@ -1,0 +1,19 @@
+{
+"type": "FeatureCollection",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::3857" } },
+"features": [
+{ "type": "Feature", "properties": { "id": "node\/2805868101" }, "geometry": { "type": "Point", "coordinates": [ 2779299.166046266, 8437207.1008346807 ] } },
+{ "type": "Feature", "properties": { "id": "node\/4368244391" }, "geometry": { "type": "Point", "coordinates": [ 2773480.7968251272, 8436227.4768552762 ] } },
+{ "type": "Feature", "properties": { "id": "node\/4368865656" }, "geometry": { "type": "Point", "coordinates": [ 2776215.7052068845, 8438331.770744279 ] } },
+{ "type": "Feature", "properties": { "id": "node\/4368865657" }, "geometry": { "type": "Point", "coordinates": [ 2776020.8293063007, 8437985.1423636694 ] } },
+{ "type": "Feature", "properties": { "id": "node\/4368865658" }, "geometry": { "type": "Point", "coordinates": [ 2775509.6502045789, 8438567.9162115213 ] } },
+{ "type": "Feature", "properties": { "id": "node\/4368865659" }, "geometry": { "type": "Point", "coordinates": [ 2774881.0401720195, 8438796.0115995426 ] } },
+{ "type": "Feature", "properties": { "id": "node\/4368865660" }, "geometry": { "type": "Point", "coordinates": [ 2774361.812671111, 8439038.6630831491 ] } },
+{ "type": "Feature", "properties": { "id": "node\/4368865661" }, "geometry": { "type": "Point", "coordinates": [ 2775027.9596359665, 8439363.1136793103 ] } },
+{ "type": "Feature", "properties": { "id": "node\/4368865662" }, "geometry": { "type": "Point", "coordinates": [ 2774625.1500585317, 8439728.8120713141 ] } },
+{ "type": "Feature", "properties": { "id": "node\/4368865663" }, "geometry": { "type": "Point", "coordinates": [ 2774822.5306476583, 8440500.8967798762 ] } },
+{ "type": "Feature", "properties": { "id": "node\/4373395489" }, "geometry": { "type": "Point", "coordinates": [ 2777665.7751578558, 8439498.8298248984 ] } },
+{ "type": "Feature", "properties": { "id": "node\/4374647790" }, "geometry": { "type": "Point", "coordinates": [ 2777717.3940057377, 8437486.8255604152 ] } },
+{ "type": "Feature", "properties": { "id": "node\/4385201889" }, "geometry": { "type": "Point", "coordinates": [ 2775907.7732314533, 8435000.3116660118 ] } }
+]
+}

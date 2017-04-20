@@ -86,8 +86,8 @@ define(function () {
             var count = 0;
             var idSlider = [];
             self.geojson.clean();
-            for (var x = 0; x <wwd.layers[3].renderables.length; x++) {
-                wwd.layers[3].renderables[x].enabled=true;
+            for (var x = 0; x <wwd.layers[2].renderables.length; x++) {
+                wwd.layers[2].renderables[x].enabled=true;
             }
             $(".name_slider div").each(function () {
                 if (this.id) {
@@ -149,7 +149,7 @@ define(function () {
                 success: function (res) {
                     self.addLayer(res);
                     data = res
-                    self.addRasters(allValues);
+                //    self.addRasters(allValues);
                 }
             });
 
@@ -189,7 +189,7 @@ define(function () {
             ajax(x);
         }
 
-        self.geojson.add3d();
+        //self.geojson.add3d();
     };
 
     UserInterface.prototype.addSingleRaster = function (res, name) {
@@ -245,8 +245,8 @@ define(function () {
         var self = this;
         var colors = [[141, 193, 197], [255, 237, 170], [215, 25, 28]];
 
-        var rightIndex = 94;
-        var topIndex = 85;
+        var rightIndex = 0;
+        var topIndex = 0;
         for (var x = 0; x < grid.renderables.length; x++) {
             grid.renderables[x].stateKeyInvalid = true;
             grid.renderables[x].enabled = false;
@@ -254,14 +254,14 @@ define(function () {
 
         for (var x = 0; x < grid.renderables.length; x++) {
 
-            topIndex--;
+            topIndex++;
 
-            if (topIndex == 0) {
-                topIndex = 84;
-                rightIndex--;
+            if (topIndex == 36) {
+                topIndex = 0;
+                rightIndex++;
             }
 
-            var r = grid.renderables[(94 * topIndex) - rightIndex];
+            var r = grid.renderables[(51 * topIndex) + rightIndex];
 
             //r.pathType = WorldWind.LINEAR;
            // r.maximumNumEdgeIntervals = 1;
