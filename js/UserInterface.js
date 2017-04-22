@@ -1,14 +1,56 @@
-
-define(function () {
+define([
+    'js/proj4'
+], function (proj4) {
     "use strict";
 
     var UserInterface = function (layerManager, geojson) {
         this.layerManager = layerManager;
         this.geojson = geojson;
-        this.rasters=[];
+        this.rasters = [];
         this.map = {};
     };
 
+    UserInterface.prototype.picking = function () {
+        var self = this;
+        if (wwd.eventListeners.mousemove.listeners[1]) {
+            wwd.removeEventListener("mousemove", wwd.eventListeners.mousemove.listeners[1]);
+        }
+
+
+        var handlePick = function (o) {
+
+            var x = o.clientX,
+                y = o.clientY;
+
+
+            var pickList = wwd.pick(wwd.canvasCoordinates(x, y));
+
+            if (pickList.objects.length > 0) {
+
+                for (var p = 0; p < pickList.objects.length; p++) {
+                    var object = pickList.objects[p].userObject;
+                    if (object._attributes) {
+                        var bounds = object._boundaries;
+                        var r = 0.002;
+                        var bbox = (bounds[0].longitude - r) + `,` + (bounds[2].latitude - r) + `,` + (bounds[2].longitude + r) + `,` + (bounds[0].latitude + r);
+                        var color = object._attributes.interiorColor;
+
+                        var zoomFunction = function () {
+                            wwd.goTo(new WorldWind.Position(bounds[0].latitude, bounds[0].longitude, 1300));
+                        };
+                        self.geojson.add3d(bbox, color, zoomFunction);
+
+
+                    }
+
+
+                }
+            }
+        };
+
+        wwd.addEventListener("dblclick", handlePick);
+
+    };
 
     UserInterface.prototype.listeners = function () {
         var self = this;
@@ -26,10 +68,10 @@ define(function () {
 
         opacitySlider.change(function (val) {
             var val = val.value.newValue;
-            for(var x in self.geojson.grid.renderables){
-                self.geojson.grid.renderables[x].attributes.interiorColor.alpha=val/10;
+            for (var x in self.geojson.grid.renderables) {
+                self.geojson.grid.renderables[x].attributes.interiorColor.alpha = val / 10;
             }
-           // self.geojson.grid.opacity = val / 10;
+            // self.geojson.grid.opacity = val / 10;
         });
 
         $('a').tooltip();
@@ -62,21 +104,21 @@ define(function () {
 
 
         $("#reset").click(function () {
-            $(".slider").slider("setValue",0);
+            $(".slider").slider("setValue", 0);
             $("#reset").hide();
             self.geojson.clean();
             var length = self.rasters.length;
             for (var x = 0; x <= length; x++) {
                 wwd.removeLayer(self.rasters[x]);
             }
-            for (var x = 0; x <wwd.layers[3].renderables.length; x++) {
-                wwd.layers[3].renderables[x].enabled=false;
+            for (var x = 0; x < wwd.layers[4].renderables.length; x++) {
+                wwd.layers[4].renderables[x].enabled = false;
             }
             $("#criteria_selected").html("");
             wwd.redraw();
             layerManager.synchronizeLayerList();
-            wwd.layers[3].enabled=false;
-            });
+            wwd.layers[3].enabled = false;
+        });
 
         $("#submitQuery").click(function () {
             $('html, body').animate({
@@ -86,8 +128,8 @@ define(function () {
             var count = 0;
             var idSlider = [];
             self.geojson.clean();
-            for (var x = 0; x <wwd.layers[2].renderables.length; x++) {
-                wwd.layers[2].renderables[x].enabled=true;
+            for (var x = 0; x < wwd.layers[4].renderables.length; x++) {
+                wwd.layers[4].renderables[x].enabled = true;
             }
             $(".name_slider div").each(function () {
                 if (this.id) {
@@ -148,8 +190,9 @@ define(function () {
                 data: {query: query},
                 success: function (res) {
                     self.addLayer(res);
-                    data = res
-                //    self.addRasters(allValues);
+                    data = res;
+                    self.picking(true);
+                    //    self.addRasters(allValues);
                 }
             });
 
@@ -167,7 +210,7 @@ define(function () {
         $("#expandLayer").show();
         $("#selectedCriteriaDiv").show();
 
-       //$("#opacity").show();
+        //$("#opacity").show();
         wwd.redraw();
     };
 
@@ -189,7 +232,6 @@ define(function () {
             ajax(x);
         }
 
-        //self.geojson.add3d();
     };
 
     UserInterface.prototype.addSingleRaster = function (res, name) {
@@ -221,13 +263,13 @@ define(function () {
 
 
     };
-
+    var max;
     UserInterface.prototype.convertToshape = function (grid, data) {
 
         var csv = [];
 
         data = data.split("},");
-        var max = 0;
+        max = 0;
         for (var x = 0; x < data.length; x++) {
             var str = data[x].replace(/\{|\}/g, '');
             str = str.split(",");
@@ -264,7 +306,7 @@ define(function () {
             var r = grid.renderables[(51 * topIndex) + rightIndex];
 
             //r.pathType = WorldWind.LINEAR;
-           // r.maximumNumEdgeIntervals = 1;
+            // r.maximumNumEdgeIntervals = 1;
             var value = csv[x];
             value = Math.round(value / 10) * 10;
             if (!self.map[value]) {
@@ -272,9 +314,11 @@ define(function () {
                 var col = geojson.getColor(((value - 0) / (max - 0)) * 100, colors);
 
                 if (value == 0) {
-                    col = WorldWind.Color.colorFromBytes(col[0], col[1], col[2], 40);
+                    col = WorldWind.Color.colorFromBytes(col[0], col[1], col[2], 0);
+                } else if (value > 0 && value < 40) {
+                    col = WorldWind.Color.colorFromBytes(col[0], col[1], col[2], 100);
                 } else {
-                    col = WorldWind.Color.colorFromBytes(col[0], col[1], col[2], 126);
+                    col = WorldWind.Color.colorFromBytes(col[0], col[1], col[2], 120);
                 }
                 self.map[value] = col;
             }

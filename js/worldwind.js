@@ -10,9 +10,11 @@ define(['./LayerManager'],
             wwd = new WorldWind.WorldWindow("canvasOne");
 
             var layers = [
+
+                {layer: new WorldWind.BingAerialWithLabelsLayer(null), enabled: true},
                 {
                     layer: new WorldWind.DigitalGlobeTiledImageLayer("Light map", "mapbox.light", 'pk.eyJ1IjoiZ2Ficnk1MDEiLCJhIjoiY2l2dGdtcjAzMDAzbjJvcWRmN3E4d3k4MCJ9.ghyEXEojEXRXklFc4DWtDA'),
-                    enabled: true
+                    enabled: false
                 },
                 {layer: new WorldWind.ViewControlsLayer(wwd), enabled: true}
             ];
@@ -22,13 +24,15 @@ define(['./LayerManager'],
             }
 
             wwd.layers[0].detailControl=0.5;
+            wwd.layers[1].detailControl=0.5;
+            wwd.layers[2].hide=true;
             // Create a layer manager for controlling layer visibility.
             this.layerManager = new LayerManager(wwd);
             layerManager = this.layerManager;
 
-            wwd.navigator.lookAtLocation.latitude = 60.192059;
+            wwd.navigator.lookAtLocation.latitude = 60.162059;
             wwd.navigator.lookAtLocation.longitude = 24.945831;
-            wwd.navigator.range = 80000;
+            wwd.navigator.range = 5500;
 
             //this.layerManager.flat();
 

@@ -4,31 +4,39 @@ define(function () {
         this.layerManager = layerManager;
         var layers = [];
         this.layers = layers;
-
+        this.polygonLayer = new WorldWind.RenderableLayer("3DPolygon");
+        this.polygonLayer.hide = true;
+        this.polygonLayer.enabled = true;
+        wwd.addLayer(this.polygonLayer);
     };
 
-    GeoJson.prototype.add3d = function () {
+    GeoJson.prototype.add3d = function (bbox, color, zoomFunction) {
+        var self = this;
 
         var shapeConfigurationCallback = function (geometry, properties) {
             var configuration = {};
-            configuration.extrude=true;
+            configuration.extrude = true;
+
             if (geometry.isPolygonType() || geometry.isMultiPolygonType()) {
                 configuration.attributes = new WorldWind.ShapeAttributes(null);
-                configuration.drawInterior = true;
+                configuration.drawInterior = false;
                 configuration.drawOutline = false;
                 configuration.attributes.drawVerticals = false;
                 configuration.attributes.extrude = true;
                 if (properties && properties.Z_Mean) {
-                    properties.altitude = properties.Z_Mean;
+                    properties.altitude = (properties.Z_Mean+1);
                 }
                 configuration.attributes.applyLighting = true;
                 configuration.attributes.enableLighting = true;
+                configuration.attributes.properties = properties;
+
                 configuration.attributes.interiorColor = new WorldWind.Color(
-                    0.375,
-                    0.375,
-                    0.375,
+                    color.red,
+                    color.green,
+                    color.blue,
                     1);
-                configuration.attributes.outlineWidth=0;
+                //configuration.attributes.outlineWidth = 0;
+                configuration.attributes.drawOutline = false;
                 configuration.attributes.outlineColor = new WorldWind.Color(
                     0.5 * configuration.attributes.interiorColor.red,
                     0.5 * configuration.attributes.interiorColor.green,
@@ -39,19 +47,18 @@ define(function () {
             return configuration;
         };
 
-        var parserCompletionCallback = function (layer) {
-            wwd.addLayer(layer);
-        };
+
         var completed = function (res) {
+            res.crs.properties.name = "urn:ogc:def:crs:OGC:1.3:CRS84";
             res = JSON.stringify(res);
-            var polygonLayer = new WorldWind.RenderableLayer("3DPolygon");
             var polygonGeoJSON = new WorldWind.GeoJSONParser(res);
-            polygonGeoJSON.load(parserCompletionCallback, shapeConfigurationCallback, polygonLayer);
+            polygonGeoJSON.load(zoomFunction, shapeConfigurationCallback, self.polygonLayer);
         };
 
+        this.polygonLayer.removeAllRenderables();
         $.ajax({
             type: "get",
-            url: 'http://131.175.59.195/geoserver/wfs?srsName=EPSG%3A3857&typename=geonode%3Ahel_buildings&outputFormat=json&version=1.0.0&service=WFS&request=GetFeature',
+            url: 'http://131.175.59.195/geoserver/wfs?srsName=EPSG%3A4326&typename=geonode%3Ahel_buildings&outputFormat=json&version=1.0.0&service=WFS&request=GetFeature&bbox=' + bbox,
             success: completed
         });
 
@@ -69,7 +76,7 @@ define(function () {
         var polygonGeoJSON = new WorldWind.GeoJSONParser(resourcesUrl + name + ".geojson");
 
         var placemarkAttributes = new WorldWind.PlacemarkAttributes(null);
-        placemarkAttributes.imageScale = 0.2;
+        placemarkAttributes.imageScale = 1;
         placemarkAttributes.imageSource = "icons/castshadow-teal.png";//'icons/' + name + '.png';
 
 
@@ -129,7 +136,7 @@ define(function () {
             }
         });
 
-        var polygonLayer = new WorldWind.RenderableLayer("CityFocus Result");
+        var polygonLayer = new WorldWind.RenderableLayer("My3D Helsinki");
 
 
         var shapeConfigurationCallback = function (geometry, properties) {
@@ -137,7 +144,6 @@ define(function () {
 
             if (geometry.isPolygonType() || geometry.isMultiPolygonType()) {
                 configuration.attributes = new WorldWind.ShapeAttributes(null);
-                configuration.attributes.outlineWidth = 0.0;
                 configuration.attributes.interiorColor = new WorldWind.Color(
                     0, 0, 0, 0);
 
@@ -148,12 +154,12 @@ define(function () {
             return configuration;
         };
         polygonLayer.enabled = false;
-        polygonLayer.pickEnabled = false;
+        polygonLayer.pickEnabled = true;
         polygonLayer.opacity = 0.5;
         polygonLayer.raster = true;
         this.grid = polygonLayer;
         wwd.addLayer(polygonLayer);
-         this.layerManager.synchronizeLayerList();
+        this.layerManager.synchronizeLayerList();
 
     };
 
