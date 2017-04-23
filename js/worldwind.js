@@ -23,7 +23,7 @@ define(['./LayerManager'],
                 wwd.addLayer(layers[l].layer);
             }
 
-            wwd.layers[0].detailControl=0.5;
+            wwd.layers[0].detailControl=0.8;
             wwd.layers[1].detailControl=0.5;
             wwd.layers[2].hide=true;
             // Create a layer manager for controlling layer visibility.

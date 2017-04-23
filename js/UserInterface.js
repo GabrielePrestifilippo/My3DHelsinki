@@ -30,6 +30,40 @@ define([
                 for (var p = 0; p < pickList.objects.length; p++) {
                     var object = pickList.objects[p].userObject;
                     if (object._attributes) {
+
+                        if (object._attributes.properties.nimi_fi) {
+                            var name = object._attributes.properties.nimi_fi;
+                            name = name.replace(/\s/g, '');
+                            $.ajax({
+                                type: "get",
+                                dataType: "json",
+                                ContentType: "application/json",
+                                url: ' http://api.hel.fi/linkedevents/v1/place/?division=' + name + '&format=json',
+                                success: function (res) {
+                                    var s = "<h2>Available places</h2>";
+                                    res.data.forEach(function (d) {
+                                        var tel="";
+                                        if(d.telephone && d.telephone.fi){
+                                            tel+=" - "+d.telephone.fi;
+                                        }
+                                        if(d.email){
+                                            tel+=" - "+d.email;
+                                        }
+                                        if(d.name.en) {
+                                            s += "<h4>" + d.name.en+tel+"</h4>";
+
+                                        }
+
+                                        if(d.description && d.description.en){
+                                            s+= "<p>" + d.description.en + "</p>";
+                                        }
+                                        s+="<hr>";
+                                    });
+                                    $("#previous").html(s);
+                                }
+                            });
+
+                        }
                         var bounds = object._boundaries;
                         var r = 0.002;
                         var bbox = (bounds[0].longitude - r) + `,` + (bounds[2].latitude - r) + `,` + (bounds[2].longitude + r) + `,` + (bounds[0].latitude + r);
@@ -114,10 +148,12 @@ define([
             for (var x = 0; x < wwd.layers[4].renderables.length; x++) {
                 wwd.layers[4].renderables[x].enabled = false;
             }
+            wwd.layers[3].removeAllRenderables();
+            $("#previous").html("");
             $("#criteria_selected").html("");
             wwd.redraw();
             layerManager.synchronizeLayerList();
-            wwd.layers[3].enabled = false;
+            wwd.layers[4].enabled = false;
         });
 
         $("#submitQuery").click(function () {

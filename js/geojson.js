@@ -24,7 +24,7 @@ define(function () {
                 configuration.attributes.drawVerticals = false;
                 configuration.attributes.extrude = true;
                 if (properties && properties.Z_Mean) {
-                    properties.altitude = (properties.Z_Mean+1);
+                    properties.altitude = (properties.Z_Mean + 1);
                 }
                 configuration.attributes.applyLighting = true;
                 configuration.attributes.enableLighting = true;
@@ -35,13 +35,13 @@ define(function () {
                     color.green,
                     color.blue,
                     1);
-                //configuration.attributes.outlineWidth = 0;
-                configuration.attributes.drawOutline = false;
                 configuration.attributes.outlineColor = new WorldWind.Color(
-                    0.5 * configuration.attributes.interiorColor.red,
-                    0.5 * configuration.attributes.interiorColor.green,
-                    0.5 * configuration.attributes.interiorColor.blue,
-                    0.0);
+                    color.red,
+                    color.green,
+                    color.blue,
+                    1);
+                configuration.attributes.drawOutline = true;
+
             }
 
             return configuration;
@@ -76,7 +76,7 @@ define(function () {
         var polygonGeoJSON = new WorldWind.GeoJSONParser(resourcesUrl + name + ".geojson");
 
         var placemarkAttributes = new WorldWind.PlacemarkAttributes(null);
-        placemarkAttributes.imageScale = 1;
+        placemarkAttributes.imageScale = 0.8;
         placemarkAttributes.imageSource = "icons/castshadow-teal.png";//'icons/' + name + '.png';
 
 
@@ -142,14 +142,12 @@ define(function () {
         var shapeConfigurationCallback = function (geometry, properties) {
             var configuration = {};
 
-            if (geometry.isPolygonType() || geometry.isMultiPolygonType()) {
-                configuration.attributes = new WorldWind.ShapeAttributes(null);
-                configuration.attributes.interiorColor = new WorldWind.Color(
-                    0, 0, 0, 0);
 
-
-                configuration.attributes.drawOutline = false;
-            }
+            configuration.attributes = new WorldWind.ShapeAttributes(null);
+            configuration.attributes.interiorColor = new WorldWind.Color(
+                0, 0, 0, 0);
+            configuration.attributes.drawOutline = false;
+            configuration.attributes.properties=properties;
 
             return configuration;
         };

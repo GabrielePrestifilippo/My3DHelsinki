@@ -491,7 +491,9 @@ div#legend {
     height: auto;
     transition: all 0.5s;
 }
-
+#previous {
+    text-align: left;
+}
 #expandRaster{
     display:none;
 }
@@ -504,4 +506,7 @@ div#legend {
 #headerLogos img{
    max-height: 120px;
     padding-right:20px;
+}
+.col-sm-3 {
+    width: 20%;
 }
